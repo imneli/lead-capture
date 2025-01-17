@@ -1,9 +1,8 @@
-import fs from "fs"; 
-import puppeteer from "puppeteer-extra"; 
-import StealthPlugin from "puppeteer-extra-plugin-stealth"; 
+import fs from "fs";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import readline from "readline/promises";
 import { stdin as input, stdout as output } from "node:process";
-
 
 puppeteer.use(StealthPlugin());
 
@@ -15,6 +14,22 @@ const getUserInput = async () => {
 
   rl.close();
   return { estabelecimento, localidade };
+};
+
+const extractPhoneNumber = async (page) => {
+  try {
+    await page.waitForSelector('button[aria-label*="Telefone"]', { timeout: 5000 });
+    await page.click('button[aria-label*="Telefone"]');
+
+    const phoneNumber = await page.evaluate(() => {
+      const phoneElement = document.querySelector('button[aria-label*="Telefone"]');
+      return phoneElement ? phoneElement.getAttribute("aria-label").replace(/\D/g, "") : null;
+    });
+
+    return phoneNumber;
+  } catch (error) {
+    return null;
+  }
 };
 
 const main = async () => {
@@ -32,9 +47,7 @@ const main = async () => {
     const acceptCookiesSelector = "form:nth-child(2)";
     await page.waitForSelector(acceptCookiesSelector, { timeout: 5000 });
     await page.click(acceptCookiesSelector);
-  } catch (error) {
-    console.log("No cookies to accept");
-  }
+  } catch (error) {}
 
   await page.evaluate(async () => {
     const searchResultsSelector = 'div[role="feed"]';
@@ -42,7 +55,7 @@ const main = async () => {
 
     await new Promise((resolve, reject) => {
       var totalHeight = 0;
-      var distance = 1000
+      var distance = 1000;
       var scrollDelay = 3000;
 
       var timer = setInterval(async () => {
@@ -56,7 +69,6 @@ const main = async () => {
 
           var scrollHeightAfter = wrapper.scrollHeight;
 
-          // If no new content, stop scrolling and finish
           if (scrollHeightAfter > scrollHeightBefore) {
             return;
           } else {
@@ -103,34 +115,26 @@ const main = async () => {
         data.reviews = ratingText[1];
       } catch (error) {}
 
-      try {
-        const textContent = item.innerText;
-        const phoneRegex =
-          /((\+?\d{1,2}[ -]?)?(\(?\d{3}\)?[ -]?\d{3,4}[ -]?\d{4}|\(?\d{2,3}\)?[ -]?\d{2,3}[ -]?\d{2,3}[ -]?\d{2,3}))/g;
-
-        const matches = [...textContent.matchAll(phoneRegex)];
-        let phoneNumbers = matches
-          .map((match) => match[0])
-          .filter((phone) => (phone.match(/\d/g) || []).length >= 10);
-
-        let phoneNumber = phoneNumbers.length > 0 ? phoneNumbers[0] : null;
-        if (phoneNumber) {
-          phoneNumber = phoneNumber.replace(/[ -]/g, "");
-        }
-
-        data.phone = phoneNumber;
-      } catch (error) {}
-
-      return data; 
+      return data;
     });
   });
 
+  for (let result of results) {
+    if (result.link) {
+      await page.goto(result.link);
+
+      result.phone = await extractPhoneNumber(page);
+
+      await page.goBack();
+    }
+  }
+
   const filteredResults = results.filter((result) => result.title);
-  fs.writeFileSync("results.json", JSON.stringify(filteredResults, null, 2)); 
+  fs.writeFileSync("results.json", JSON.stringify(filteredResults, null, 2));
 
   console.log("Completed");
 
-  await browser.close(); 
+  await browser.close();
 };
 
-main(); 
+main();
