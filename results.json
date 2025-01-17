@@ -1,0 +1,25 @@
+[
+  {
+    "title": "Academia Smart Fit - Jaguaribe",
+    "link": "https://www.google.com/maps/place/Academia+Smart+Fit+-+Jaguaribe/data=!4m7!3m6!1s0x935a2fc63a21a9d5:0xc47add295a93811e!8m2!3d-23.5634916!4d-46.7908422!16s%2Fg%2F11c1q94fdr!19sChIJ1akhOsYvWpMRHoGTWindesQ?authuser=0&hl=pt-BR&rclk=1",
+    "website": "/aclk?sa=l&ai=DChcSEwii3OCitv2KAxXJKEQIHdXgBJIYABABGgJkeg&co=1&ase=2&gclid=EAIaIQobChMIotzgorb9igMVyShECB3V4ASSEBAYASAAEgJJRPD_BwE&sig=AOD64_1Q6hgx9vk6wKoClmQUo_oG8cFRQQ&adurl&ctype=99&nis=6",
+    "stars": 4.4,
+    "reviews": 1.294,
+    "phone": null
+  },
+  {
+    "title": "Academia do Bahia",
+    "link": "https://www.google.com/maps/place/Academia+do+Bahia/data=!4m7!3m6!1s0x94cf06623207618f:0xc1fecfa829fbea57!8m2!3d-23.5541127!4d-46.9443708!16s%2Fg%2F1ptyfcxxt!19sChIJj2EHMmIGz5QRV-r7KajP_sE?authuser=0&hl=pt-BR&rclk=1",
+    "stars": 3.5,
+    "reviews": 20,
+    "phone": "1142051270"
+  },
+  {
+    "title": "Fitplace Higienopolis",
+    "link": "https://www.google.com/maps/place/Fitplace+Higienopolis/data=!4m7!3m6!1s0x94ce5831d502c1cf:0x59ae1a0dc7d79e32!8m2!3d-23.5502513!4d-46.6607953!16s%2Fg%2F11b8z6zrrs!19sChIJz8EC1TFYzpQRMp7Xxw0arlk?authuser=0&hl=pt-BR&rclk=1",
+    "website": "http://fitplace.com.br/",
+    "stars": 4.8,
+    "reviews": 57,
+    "phone": "11981231661"
+  }
+]
