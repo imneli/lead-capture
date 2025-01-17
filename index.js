@@ -41,7 +41,7 @@ const main = async () => {
 
   const page = await browser.newPage();
 
-  await page.goto(`https://www.google.com/maps/search/${estabelecimento}+${localidade}/`);
+  await page.goto(`https://www.google.com/maps/search/${estabelecimento}+em+${localidade}/`);
 
   try {
     const acceptCookiesSelector = "form:nth-child(2)";
