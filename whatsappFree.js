@@ -3,6 +3,9 @@ const fs = require('fs');
 
 const data = JSON.parse(fs.readFileSync('results.json', 'utf-8'));
 
+// lembrando que o número de telefone deve ser digitado no formato +55DDDNumero, e outra, use por conta e risco, você tem chance de ser banido do WhatsApp Web por spam. 
+// Então recomendo usar a versão para desenvolvedores do WhatsApp, o WhatsApp Business API, que é paga, mas é mais segura.
+
 async function enviarMensagemWhatsApp(phone, message) {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
