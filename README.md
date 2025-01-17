@@ -1,4 +1,9 @@
+
+<div align="center">
+
 # 🔍 Lead Scrapper | Google Maps to Discord
+
+</div>
 
 <div align="center">
 
