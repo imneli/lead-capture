@@ -32,6 +32,21 @@ const extractPhoneNumber = async (page) => {
   }
 };
 
+const extractWebsite = async (page) => {
+  try {
+    await page.waitForSelector('a[aria-label*="Website"]', { timeout: 3000 });
+    return await page.evaluate(() => {
+      const websiteElement = document.querySelector('a[aria-label*="Website"]');
+      if (!websiteElement) return null;
+      
+      const url = new URL(websiteElement.href);
+      return url.searchParams.get('q') || websiteElement.href;
+    });
+  } catch (error) {
+    return null;
+  }
+};
+
 const main = async () => {
   const { estabelecimento, localidade } = await getUserInput();
 
@@ -41,7 +56,7 @@ const main = async () => {
 
   const page = await browser.newPage();
 
-  await page.goto(`https://www.google.com/maps/search/${estabelecimento}+em+${localidade}/`);
+  await page.goto(`https://www.google.com/maps/search/${estabelecimento}+${localidade}/`);
 
   try {
     const acceptCookiesSelector = "form:nth-child(2)";
@@ -97,12 +112,6 @@ const main = async () => {
       } catch (error) {}
 
       try {
-        data.website = item
-          .querySelector('[data-value="Website"]')
-          .getAttribute("href");
-      } catch (error) {}
-
-      try {
         const ratingText = item
           .querySelector('.fontBodyMedium > span[role="img"]')
           .getAttribute("aria-label")
@@ -119,11 +128,18 @@ const main = async () => {
     });
   });
 
+  const totalResults = results.length;
+  let currentIndex = 0;
+
   for (let result of results) {
+    currentIndex++;
+    console.log(`Processando ${currentIndex}/${totalResults} - ${result.title || 'Sem nome'}`);
+    
     if (result.link) {
       await page.goto(result.link);
 
       result.phone = await extractPhoneNumber(page);
+      result.website = await extractWebsite(page);
 
       await page.goBack();
     }
@@ -133,7 +149,6 @@ const main = async () => {
   fs.writeFileSync("results.json", JSON.stringify(filteredResults, null, 2));
 
   console.log("Completed");
-
   await browser.close();
 };
 
